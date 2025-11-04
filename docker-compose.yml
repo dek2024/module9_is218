@@ -1,7 +1,5 @@
-version: '3.8'
-
 services:
-  # Service: web
+  # Service: web (FastAPI)
   web:
     build: .
     container_name: fastapi_calculator
@@ -21,7 +19,7 @@ services:
 
   # Service: db (PostgreSQL)
   db:
-    image: postgres
+    image: postgres:18
     container_name: postgres_db
     environment:
       POSTGRES_USER: postgres
@@ -30,7 +28,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql        # ✅ FIXED
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
@@ -39,15 +37,15 @@ services:
     networks:
       - app-network
 
-  # Service: pgadmin
+  # Service: pgAdmin
   pgadmin:
-    image: dpage/pgadmin4  # Updated to a newer version
+    image: dpage/pgadmin4
     container_name: pgadmin
     environment:
-      PGADMIN_DEFAULT_EMAIL: admin@example.com
-      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_DEFAULT_EMAIL: admin@pgadmin.com
+      PGADMIN_DEFAULT_PASSWORD: root
     ports:
-      - "5050:80"  # Ensure port 5050 is free or change if necessary
+      - "5050:80"
     volumes:
       - pgadmin_data:/var/lib/pgadmin
     depends_on:
